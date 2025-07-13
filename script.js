@@ -249,6 +249,21 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity: 1;
             transform: translateY(0);
         }
+        
+        /* Dashboard Container Animations */
+        .dashboard-container {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .dashboard-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .dashboard-container.hide {
+            opacity: 0;
+            transform: translateY(20px);
+        }
     `;
     document.head.appendChild(style);
     
@@ -263,4 +278,183 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize typing effect
     initTypingEffect();
+    
+    // Dashboard Modal functionality
+    const modal = document.getElementById('dashboardModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDashboard = document.getElementById('modalDashboard');
+    const modalClose = document.querySelector('.modal-close');
+    
+    // Dashboard data mapping for Tableau dashboards
+    const dashboardData = {
+        'viz1752380387164': {
+            title: 'E-Commerce Customer Churn Dashboard',
+            url: 'E-CommerceCustomerChurnDashboard/Dashboard1',
+            type: 'tableau'
+        },
+        'viz1752381400227': {
+            title: 'Titanic Survival Analysis',
+            url: 'TitanicSurvivalAnalysis_17509115262450/Dashboard1',
+            type: 'tableau'
+        },
+        'viz1752381551596': {
+            title: 'Most In-Demand Job Skills – LinkedIn 2024',
+            url: 'Jobskillanalysis/Dashboard1',
+            type: 'tableau'
+        },
+        'viz1752381622840': {
+            title: 'Startup Funding Trends in India 🇮🇳',
+            url: 'Startupfundingtrends/Dashboard1',
+            type: 'tableau'
+        },
+        'viz1752381744101': {
+            title: 'E-commerce Revenue Optimization',
+            url: 'E-commerceRevnueOptimizationDasboard/Dashboard1',
+            type: 'tableau'
+        }
+    };
+    
+    // Handle all dashboard toggle buttons - UPDATED VERSION
+    document.querySelectorAll('.toggle-dashboard').forEach((toggle, index) => {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const card = this.closest('.project-card');
+            const dashboardContainer = card.querySelector('.dashboard-container');
+            
+            // Check if this card has an iframe (Looker Studio dashboard)
+            const iframe = dashboardContainer.querySelector('iframe');
+            
+            if (iframe) {
+                // Handle Looker Studio dashboard - open in modal instead of inline
+                const iframeSrc = iframe.src;
+                const cardTitle = card.querySelector('h3').textContent;
+                openLookerStudioModal(cardTitle, iframeSrc);
+            } else {
+                // Handle Tableau dashboard - open in modal
+                const tableauDiv = dashboardContainer.querySelector('[id^="viz"]');
+                if (tableauDiv) {
+                    const dashboardId = tableauDiv.id;
+                    const dashboardInfo = dashboardData[dashboardId];
+                    
+                    if (dashboardInfo) {
+                        openTableauModal(dashboardInfo.title, dashboardInfo.url, dashboardId);
+                    }
+                }
+            }
+        });
+    });
+    
+    // Open Looker Studio Dashboard Modal
+    function openLookerStudioModal(title, iframeSrc) {
+        if (!modal) return;
+        
+        modalTitle.textContent = title;
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        
+        // Create iframe embed for Looker Studio
+        modalDashboard.innerHTML = `
+            <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+                <iframe 
+                    src="${iframeSrc}" 
+                    frameborder="0" 
+                    style="width: 100%; height: 100%; border: none;" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        `;
+    }
+    
+    // Open Tableau Dashboard Modal
+    function openTableauModal(title, dashboardUrl, originalId) {
+        if (!modal) return;
+        
+        modalTitle.textContent = title;
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        
+        // Create unique ID for modal dashboard
+        const modalId = 'modal_' + originalId;
+        
+        // Create Tableau embed for modal
+        modalDashboard.innerHTML = `
+            <div class='tableauPlaceholder' id='${modalId}' style='position: relative; width: 100%; height: 100%;'>
+                <object class='tableauViz' style='display:none;'>
+                    <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+                    <param name='embed_code_version' value='3' />
+                    <param name='site_root' value='' />
+                    <param name='name' value='${dashboardUrl}' />
+                    <param name='tabs' value='no' />
+                    <param name='toolbar' value='yes' />
+                    <param name='animate_transition' value='yes' />
+                    <param name='display_static_image' value='yes' />
+                    <param name='display_spinner' value='yes' />
+                    <param name='display_overlay' value='yes' />
+                    <param name='display_count' value='yes' />
+                    <param name='language' value='en-US' />
+                </object>
+            </div>
+        `;
+        
+        // Load Tableau visualization in modal
+        setTimeout(() => {
+            const divElement = document.getElementById(modalId);
+            const vizElement = divElement.getElementsByTagName('object')[0];
+            
+            // Full size for modal
+            vizElement.style.width = '100%';
+            vizElement.style.height = '100%';
+            
+            // Load Tableau script if not already loaded
+            if (!window.tableau) {
+                const scriptElement = document.createElement('script');
+                scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+                scriptElement.onload = () => {
+                    vizElement.parentNode.insertBefore(scriptElement, vizElement);
+                };
+                document.head.appendChild(scriptElement);
+            } else {
+                const scriptElement = document.createElement('script');
+                scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+                vizElement.parentNode.insertBefore(scriptElement, vizElement);
+            }
+        }, 100);
+    }
+    
+    // Close Dashboard Modal
+    function closeDashboardModal() {
+        if (!modal) return;
+        
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto'; // Restore scrolling
+        
+        // Clear modal content to prevent conflicts
+        setTimeout(() => {
+            if (modalDashboard) {
+                modalDashboard.innerHTML = '';
+            }
+        }, 300);
+    }
+    
+    // Close modal events
+    if (modalClose) {
+        modalClose.addEventListener('click', closeDashboardModal);
+    }
+    
+    // Close modal when clicking outside
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeDashboardModal();
+            }
+        });
+    }
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal && modal.classList.contains('show')) {
+            closeDashboardModal();
+        }
+    });
 });

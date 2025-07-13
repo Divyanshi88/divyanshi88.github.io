@@ -840,6 +840,271 @@ section {
     transform: translateX(5px);
 }
 
+/* Dashboard Card Specific Styles */
+.dashboard-card {
+    position: relative;
+    overflow: visible; /* Allow dashboard to expand outside card boundaries */
+}
+
+.dashboard-card .project-image {
+    background: var(--gradient-accent); /* Use accent gradient for dashboard */
+}
+
+.dashboard-container {
+    margin-top: 25px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s ease;
+    border: 2px solid rgba(var(--primary-color-rgb), 0.2);
+}
+
+.dashboard-container:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Dark mode adjustments for dashboard */
+[data-theme="dark"] .dashboard-container {
+    border-color: rgba(var(--primary-color-rgb), 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .dashboard-container:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Tableau responsive adjustments */
+.tableauPlaceholder {
+    width: 100% !important;
+}
+
+.tableauViz {
+    width: 100% !important;
+}
+
+/* Dashboard toggle button enhancement */
+.toggle-dashboard {
+    position: relative;
+    padding: 8px 16px;
+    border-radius: 25px;
+    background: rgba(var(--primary-color-rgb), 0.1);
+    border: 1px solid var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.toggle-dashboard:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(var(--primary-color-rgb), 0.3);
+}
+
+/* Mobile responsiveness for dashboard */
+@media (max-width: 768px) {
+    .dashboard-container {
+        margin: 15px -15px 0 -15px; /* Extend to card edges on mobile */
+        border-radius: 10px;
+    }
+    
+    .tableauPlaceholder {
+        min-height: 400px;
+    }
+}
+
+/* Dashboard Modal Styles */
+.dashboard-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+.dashboard-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    width: 95%;
+    height: 95%;
+    max-width: 1400px;
+    max-height: 900px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalSlideIn 0.4s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    background: var(--gradient-primary);
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.modal-close {
+    font-size: 2rem;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.modal-body {
+    flex: 1;
+    padding: 0;
+    overflow: hidden;
+    background: var(--background-color);
+}
+
+#modalDashboard {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    background: var(--background-color);
+}
+
+#modalDashboard .tableauPlaceholder {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0;
+}
+
+#modalDashboard .tableauViz {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Modal Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+    from { 
+        opacity: 0;
+        transform: scale(0.8) translateY(-50px);
+    }
+    to { 
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Mobile Modal Adjustments */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 98%;
+        height: 98%;
+        margin: 1%;
+    }
+    
+    .modal-header {
+        padding: 15px 20px;
+    }
+    
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .modal-close {
+        width: 35px;
+        height: 35px;
+        font-size: 1.5rem;
+    }
+}
+
+/* Dashboards Section */
+.dashboards {
+    padding: 100px 0;
+    background: var(--background-color);
+    position: relative;
+}
+
+.dashboards::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 20%, rgba(var(--primary-color-rgb), 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(var(--accent-color), 0.03) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.dashboards .container {
+    position: relative;
+    z-index: 1;
+}
+
+.dashboards .section-title {
+    margin-bottom: 60px;
+}
+
+/* Dashboard specific project cards styling */
+.dashboards .project-card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+    border-top: 4px solid var(--accent-color);
+}
+
+.dashboards .project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dashboards .project-image {
+    background: var(--gradient-accent);
+    height: 160px;
+}
+
+.dashboards .project-image i {
+    font-size: 4.5rem;
+    color: white;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
 /* Education Section */
 .timeline {
     position: relative;
@@ -1072,10 +1337,11 @@ section {
 
 /* Footer */
 .footer {
-    background-color: var(--dark-color);
-    color: white;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     text-align: center;
     padding: 30px 0;
+    border-top: 1px solid var(--border-color, rgba(0,0,0,0.1));
 }
 
 .footer-content {
@@ -1095,7 +1361,7 @@ section {
     width: 36px;
     height: 36px;
     background: rgba(255, 255, 255, 0.1);
-    color: white;
+    color: var(--text-color); /* Changed from 'white' to use CSS variable */
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -1106,11 +1372,13 @@ section {
 .footer-social .social-link:hover {
     transform: translateY(-5px);
     background: var(--primary-color);
+    color: var(--text-color); /* Ensure hover state also uses theme color */
 }
 
 .footer-email {
     font-size: 0.9rem;
     opacity: 0.8;
+    color: var(--text-color); /* Added explicit color for email */
 }
 
 /* Responsive Design */
