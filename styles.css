@@ -1183,6 +1183,25 @@ section {
     margin-bottom: 10px;
 }
 
+.experience-role {
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.experience-list {
+    list-style: disc;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.experience-list li {
+    margin-bottom: 8px;
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
 /* Contact Section */
 .contact-content {
     display: grid;

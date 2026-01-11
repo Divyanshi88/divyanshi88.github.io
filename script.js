@@ -174,7 +174,7 @@ function initTypingEffect() {
     const typingElement = document.getElementById('typing-text');
     if (typingElement) {
         const options = {
-            strings: ['Data Science Enthusiast', 'Machine Learning Developer', 'Problem Solver', 'AI Researcher'],
+            strings: ['Data Analyst', 'AI Engineer', 'Machine Learning Developer', 'Problem Solver'],
             typeSpeed: 50,
             backSpeed: 30,
             backDelay: 2000,
